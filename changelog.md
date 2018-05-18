@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1~rc1
+
+### Operations
+* Updated grsecurity kernels to 4.4.132 (#3443)
+
 ## 0.7.0
 
 ### Web Applications
