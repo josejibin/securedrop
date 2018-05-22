@@ -36,8 +36,17 @@ database_migration() {
 
     # `alembic current` outputs nothing if the DB isn't under verion control.
     if [ -z "$(alembic current)" ]; then
-        # Revision of migration 15ac9509fc68_init.py
-        alembic stamp 15ac9509fc68
+        sqlite_tables=$(sqlite3 "$database_file" .tables)
+
+        if ! echo "$sqlite_tables" | grep -q journalists; then
+            # This is a fresh install, run the full migrations.
+            alembic upgrade head
+        else
+            # This is an old install, so mark that the scheme is up to date
+            # as of the version of migration 15ac9509fc68_init.py when we first
+            # started version controlling the database
+            alembic stamp 15ac9509fc68
+        fi
     fi
 
     if ! alembic current | grep -q '(head)'; then
