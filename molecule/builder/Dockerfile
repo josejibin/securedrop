@@ -5,7 +5,16 @@ FROM ubuntu@sha256:b8855dc848e2622653ab557d1ce2f4c34218a9380cceaa51ced85c5f3c8eb
 LABEL org="Freedom of the Press"
 LABEL image_name="trusty-sd-builder-app"
 
-RUN apt-get -y update && apt-get upgrade -y && apt-get install -y \
+# Pin priority to trusty and install xenial repos for a newer version of python-pip
+# that supports pinning of hashes.
+
+COPY preferences /etc/apt/preferences
+RUN echo "deb http://archive.ubuntu.com/ubuntu/ xenial universe" >> /etc/apt/sources.list
+RUN echo "deb http://archive.ubuntu.com/ubuntu/ xenial-security universe" >> /etc/apt/sources.list
+
+RUN apt-get -y update && apt-get upgrade -y
+RUN apt-get install -t xenial -y python-pip
+RUN apt-get install -y \
         aptitude \
         devscripts \
         git \
